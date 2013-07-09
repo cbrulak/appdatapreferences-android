@@ -38,7 +38,7 @@ public class AppdataSyncerService extends Service {
     synchronized (lock) {
       if (sAppdataSyncerAdapter == null) {
         sAppdataSyncerAdapter =
-            new AppdataSyncerAdapter(getApplicationContext(), true);
+            new AppdataSyncerAdapter(getApplicationContext(), false);
       }
     }
   }
