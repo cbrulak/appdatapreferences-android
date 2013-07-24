@@ -161,9 +161,9 @@ public class AppdataPreferencesSyncer {
    * @param credential User's credential
    */
   public void setCredential(GoogleAccountCredential credential) {
+      Log.d(TAG,"setCredential: credential");
     mCredential = credential;
-    mSyncManager =
-        new AppdataPreferencesSyncManager(credential.getSelectedAccount());
+    mSyncManager = new AppdataPreferencesSyncManager(credential.getSelectedAccount());
     mSyncManager.startPeriodicSync();
   }
 
@@ -174,9 +174,9 @@ public class AppdataPreferencesSyncer {
    * @param config Configuration parameters
   */
   public void setCredential(GoogleAccountCredential credential, Bundle config) {
+      Log.d(TAG,"setCredential: credential,config");
     mCredential = credential;
-    mSyncManager =
-                new AppdataPreferencesSyncManager(credential.getSelectedAccount(),config);
+    mSyncManager = new AppdataPreferencesSyncManager(credential.getSelectedAccount(),config);
     mSyncManager.startPeriodicSync();
   }
 
@@ -233,6 +233,7 @@ public class AppdataPreferencesSyncer {
     Utils.replaceValues(mPreferences, remoteObj);
     // Notify if there are changes
     if (json != mLastSyncedJson && mOnChangeListener != null) {
+        Log.d(TAG, "Updating the local preferences file ---- notifing listeners");
       mOnChangeListener.onChange(mPreferences);
       mLastSyncedJson = json;
     }

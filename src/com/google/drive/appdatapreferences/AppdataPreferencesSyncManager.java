@@ -19,6 +19,7 @@ package com.google.drive.appdatapreferences;
 import android.accounts.Account;
 import android.content.ContentResolver;
 import android.os.Bundle;
+import android.util.Log;
 
 /**
  * Helps to manage the syncer. Provides utilities to start, stop
@@ -68,9 +69,11 @@ public class AppdataPreferencesSyncManager {
    */
   public void startPeriodicSync() {
     startSync();
-    int freqInSecs = mParams.getInt(KEY_FREQ, 3);
+    int freqInSecs = mParams.getInt(KEY_FREQ, 3000);
+      Log.d(AppdataPreferencesSyncer.TAG, "Frequency is " + freqInSecs);
+    ContentResolver.removePeriodicSync(mAccount, AUTHORITY, new Bundle());
     ContentResolver.setSyncAutomatically(mAccount, AUTHORITY, true);
-    ContentResolver.addPeriodicSync(mAccount, AUTHORITY, mParams, freqInSecs);
+    ContentResolver.addPeriodicSync(mAccount, AUTHORITY, new Bundle(), freqInSecs);
   }
 
   /**
