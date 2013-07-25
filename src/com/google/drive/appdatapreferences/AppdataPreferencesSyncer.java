@@ -99,18 +99,24 @@ public class AppdataPreferencesSyncer {
     // TODO: don't silently ignore the sync operation
     // notify user that preferences and credential are not set.
     if (mPreferences == null || mCredential == null) {
+        if(mPreferences == null)
+            ADPLog.d(TAG,"sync:: mPrefereneces is null");
+        if(mCredential == null)
+            ADPLog.d(TAG,"sync:: mCredential is null");
       return;
     }
     // check if the values are changed since last update
     Map<String, ?> values = mPreferences.getAll();
     String localJson = GSON.toJson(values);
     try {
+        ADPLog.d(TAG,"sync:: values size: " + values.size() + " equality: " + localJson.equals(mLastSyncedJson) + " localJson: " + localJson + " mLastSyncedJson: "+ mLastSyncedJson);
       if (values.size() > 0 && localJson != null && !localJson.equals(mLastSyncedJson)) {
         updateRemote(localJson);
       } else {
         updateLocal();
       }
     } catch (IOException e) {
+        ADPLog.e(TAG,"sync exception",e);
       handleException(e);
     }
   }
@@ -200,6 +206,10 @@ public class AppdataPreferencesSyncer {
    * @param listener
    */
   public void setOnChangeListener(OnChangeListener listener) {
+      if(listener == null)
+      {
+          ADPLog.d(TAG,"Listener is null");
+      }
     mOnChangeListener = listener;
   }
 
@@ -230,7 +240,8 @@ public class AppdataPreferencesSyncer {
     remoteObj = GSON.fromJson(json, type);
     Utils.replaceValues(mPreferences, remoteObj);
     // Notify if there are changes
-    if (json != mLastSyncedJson && mOnChangeListener != null) {
+    if (!json.equals(mLastSyncedJson) && mOnChangeListener != null) {
+        ADPLog.d(TAG, "Updating the local preferences file. json: " + json + " mLastSyncedJson: "+ mLastSyncedJson);
       mOnChangeListener.onChange(mPreferences);
       mLastSyncedJson = json;
     }
