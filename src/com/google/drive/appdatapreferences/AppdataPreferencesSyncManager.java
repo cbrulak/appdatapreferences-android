@@ -65,6 +65,7 @@ public class AppdataPreferencesSyncManager {
   public void startPeriodicSync() {
     startSync();
     int freqInSecs = mParams.getInt(KEY_FREQ, 3);
+    ADPLog.d(AppdataPreferencesSyncer.TAG, "Frequency is: " + freqInSecs);
     ContentResolver.setSyncAutomatically(mAccount, AUTHORITY, true);
     ContentResolver.addPeriodicSync(mAccount, AUTHORITY, mParams, freqInSecs);
   }
