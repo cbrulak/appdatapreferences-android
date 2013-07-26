@@ -190,6 +190,16 @@ public class AppdataPreferencesSyncer {
    */
   public void setPreferences(SharedPreferences preferences) {
     mPreferences = preferences;
+      try {
+          if(mPreferences == null)
+          {
+            throw new Exception();
+          }
+      } catch (Exception e) {
+          //e.printStackTrace();
+          ADPLog.e(TAG,"setPreferences: preferences is null " +  Log.getStackTraceString(e),e);
+
+      }
   }
 
   /**

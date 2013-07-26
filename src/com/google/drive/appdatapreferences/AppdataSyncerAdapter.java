@@ -19,6 +19,7 @@ package com.google.drive.appdatapreferences;
 import android.accounts.Account;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
@@ -52,10 +53,27 @@ public class AppdataSyncerAdapter extends AbstractThreadedSyncAdapter {
   public void onPerformSync(
       Account account, Bundle bundle, String authority,
       ContentProviderClient provider, SyncResult syncResult) {
-    ADPLog.d(TAG, "Syncing the preferences....");
+    ADPLog.d(TAG, "Syncing the preferences.... syncResultDebug: " + syncResult.toDebugString() + "syncResult " + syncResult.toString());
     // TODO: experiment exponential backoff for erroneous cases.
     // TODO: update syncResult.stats accordingly
     AppdataPreferencesSyncer.get(mContext).sync();
+
+      if(syncResult.hasError())
+      {
+          ADPLog.d(TAG, "Syncing the preferences result has error");
+          if(syncResult.hasHardError())
+          {
+              ADPLog.d(TAG, "Syncing the preferences result has hard error");
+          }
+          if(syncResult.hasSoftError())
+          {
+              ADPLog.d(TAG, "Syncing the preferences result has soft error");
+          }
+      }
+      //syncResult.stats.clear();
+      //syncResult.clear();
+      syncResult.delayUntil = 10000;
+      syncResult.stats.numEntries++;
   }
 
   private final static String TAG = "syncer";
